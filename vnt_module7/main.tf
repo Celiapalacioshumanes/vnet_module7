@@ -24,6 +24,7 @@ module "nsgs" {
   source   = "./modules/nsg"
   for_each = { for subnet in var.subnets : subnet.name => subnet if contains(keys(subnet), "nsg") }
 
+  vnet_name           = var.vnet_name
   resource_group_name = var.existent_resource_group_name
   subnet_name         = each.key
   nsg                 = each.value.nsg
