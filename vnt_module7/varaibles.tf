@@ -33,3 +33,11 @@ variable "vnet_tags" {
   type        = map(string)
 }
 
+variable "subnets" {
+  description = "Lista de subredes con nombre, prefijos y, opcionalmente, NSG"
+  type = list(object({
+    name             = string
+    address_prefixes = list(string)
+    nsg              = optional(string)
+  }))
+}
