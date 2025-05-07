@@ -1,35 +1,45 @@
 variable "vnet_name" {
-  description = "Nombre de la VNet"
-  type        = string
+  type = string
 }
-
 variable "vnet_address_space" {
-  description = "Espacio de direcciones de la VNet"
-  type        = list(string)
+  type = list(string)
 }
-
 variable "location" {
-  description = "Ubicación del recurso"
-  type        = string
+  type = string
 }
-
 variable "existent_resource_group_name" {
-  description = "Nombre del grupo de recursos existente"
-  type        = string
+  type = string
 }
-
 variable "owner_tag" {
-  description = "Propietario de la VNet"
-  type        = string
+  type = string
 }
-
 variable "environment_tag" {
-  description = "Entorno de la VNet (dev, test, prod, etc.)"
-  type        = string
+  type = string
+}
+variable "vnet_tags" {
+  type    = map(string)
+  default = {}
+}
+variable "subnets" {
+  description = "Lista de subredes con NSG opcional"
+  type = list(object({
+    name             = string
+    address_prefixes = list(string)
+    nsg = optional(object({
+      name           = string
+      security_rules = list(object({
+        name                       = string
+        priority                   = number
+        direction                  = string
+        access                     = string
+        protocol                   = string
+        source_port_range          = string
+        destination_port_range     = string
+        source_address_prefix      = string
+        destination_address_prefix = string
+      }))
+    }))
+  }))
+  default = []
 }
 
-variable "vnet_tags" {
-  description = "Tags adicionales que se aplicarán a la VNet"
-  type        = map(string)
-  default     = {}
-}
