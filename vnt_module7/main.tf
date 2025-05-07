@@ -1,37 +1,32 @@
 module "vnet" {
-  source =  "git::https://github.com/Celiapalacioshumanes/vnet_module7.git"
+  source = "git::https://github.com/Celiapalacioshumanes/vnt_module6.git?ref=main"
 
+  vnet_name                    = var.vnet_name
+  vnet_address_space           = var.vnet_address_space
+  location                     = var.location
+  existent_resource_group_name = var.existent_resource_group_name
+  owner_tag                    = var.owner_tag
+  environment_tag              = var.environment_tag
+  vnet_tags                    = var.vnet_tags
+}
 
-  vnet_name                    = "vnetceliatfexercise07"
-  vnet_address_space           = ["10.2.0.0/16"]
-  location                     = "westeurope"
-  existent_resource_group_name = "rg-cpalacios-dvfinlab"
-
-  owner_tag       = "Celia"
-  environment_tag = "dev"
-  vnet_tags = {
-    proyecto = "TF-Ejercicio07"
-  }
-
-module "subnet" {
+module "subnets" {
+  source   = "./modules/subnet"
   for_each = { for subnet in var.subnets : subnet.name => subnet }
 
-  source              = "./module/subnet"
+  vnet_name           = var.vnet_name
+  resource_group_name = var.existent_resource_group_name
   name                = each.value.name
   address_prefixes    = each.value.address_prefixes
-  vnet_name           = azurerm_virtual_network.vnet.name
-  resource_group_name = var.existent_resource_group_name
 }
 
-module "nsg" {
-  for_each = {
-    for subnet in var.subnet : subnet.name => subnet.nsg
-    if contains(keys(subnet), "nsg")
-  }
+module "nsgs" {
+  source   = "./modules/nsg"
+  for_each = { for subnet in var.subnets : subnet.name => subnet if contains(keys(subnet), "nsg") }
 
-  source              = "./module/nsg"
-  name                = each.value.name
+  resource_group_name = var.existent_resource_group_name
+  subnet_name         = each.key
+  nsg                 = each.value.nsg
   location            = var.location
-  resource_group_name = var.existent_resource_group_name
-  security_rules      = each.value.security_rules
 }
+
