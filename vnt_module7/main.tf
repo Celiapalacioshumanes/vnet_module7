@@ -1,3 +1,18 @@
+module "vnet" {
+  source =  "git::https://github.com/Celiapalacioshumanes/vnet_module7.git"
+
+
+  vnet_name                    = "vnetceliatfexercise07"
+  vnet_address_space           = ["10.2.0.0/16"]
+  location                     = "westeurope"
+  existent_resource_group_name = "rg-cpalacios-dvfinlab"
+
+  owner_tag       = "Celia"
+  environment_tag = "dev"
+  vnet_tags = {
+    proyecto = "TF-Ejercicio07"
+  }
+
 module "subnet" {
   for_each = { for subnet in var.subnets : subnet.name => subnet }
 
