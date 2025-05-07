@@ -9,13 +9,7 @@ module "vnet" {
   environment_tag              = var.environment_tag
   vnet_tags                    = var.vnet_tags
 }
-resource "azurerm_virtual_network" "vnet" {
-  name                = var.vnet_name
-  address_space       = var.vnet_address_space
-  location            = var.location
-  resource_group_name = var.existent_resource_group_name
-  tags                = var.vnet_tags
-}
+
 
 output "vnet_name" {
   value = azurerm_virtual_network.vnet.name
