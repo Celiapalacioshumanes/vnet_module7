@@ -10,11 +10,6 @@ module "vnet" {
   vnet_tags                    = var.vnet_tags
 }
 
-
-output "vnet_name" {
-  value = azurerm_virtual_network.vnet.name
-}
-
 module "subnets" {
   source   = "./modules/subnet"
   for_each = { for subnet in var.subnets : subnet.name => subnet }
