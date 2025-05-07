@@ -10,16 +10,6 @@ module "vnet" {
   vnet_tags                    = var.vnet_tags
 }
 
-module "vnet_full" {
-  source = "./modules/vnet_full"
-
-  vnet_name                    = var.vnet_name
-  vnet_address_space           = var.vnet_address_space
-  location                     = var.location
-  existent_resource_group_name = var.existent_resource_group_name
-  subnets                      = var.subnets  # Pasamos la variable subnets al módulo vnet_full
-}
-
 module "subnets" {
   source   = "./modules/subnet"
   for_each = { for subnet in var.subnets : subnet.name => subnet }
